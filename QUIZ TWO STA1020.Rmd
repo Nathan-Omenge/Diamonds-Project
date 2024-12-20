@@ -1,0 +1,381 @@
+---
+\---
+title: "QUIZ TWO; PROBABILTY AND STATISTICS"
+author: "Nathan Orang'o Omenge"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# [List of Packages and Data sets Used]{.underline}
+
+```{R}
+# Libraries Used in this Document
+library(tidyverse)
+library(dplyr)
+library(summarytools)
+library(reshape2)
+# Datasets used in this Document
+data("diamonds")
+
+```
+
+# Question One; Provide a description of the data structure and the variables in the data set. {.underline}
+
+## Exploring the Data set
+
+```{R}
+# Viewing diamonds dataset
+tibble::view(diamonds)
+
+# A general overview of the dataset
+glimpse(diamonds)
+```
+
+# Brief overview of Diamonds Data Set
+
+`Diamonds` data set is a data frame composed of information on 53,940 round-cut diamonds, organised in 10 columns (variables of interest). Below is a summary of the various variables of interest in order of appearance, detailing the variables, their span, and a brief summary of the insight they are intended to provide.
+
+1.  `Carat` ⇨ This is a numeric variable, detailing the various weights of individual diamonds, with values spanning from 0.2-5.01.
+2.  `Cut` ⇨ This is an ordered (ordinal) factor (referring to categorical variables with predefined orders for its levels). There are five levels of cut; `Fair`, `Good`, `Very Good`, `Premium` and `Ideal`.
+3.  `Color` ⇨ This is an ordered factor, referring to the color of the individual diamonds. they are ordered from `D` (The best) to `J` (The worst).
+4.  `Clarity`⇨ This is an ordered factor, and is a measurement of how clear a diamond is. It is ordered from `I1` (worst), `SI2`, `SI1`, `VS2`, `VS1`, `VVS2`, `VVS1` to `IF` (best).
+5.  `Depth` ⇨ This is a numeric variable, detailing the total depth percentage. It is a measure of the diamond's total depth relative to its average diameter. The depth ranges from `43` - `79` percent within this data set.
+6.  `Table` ⇨ This is a numeric variable, detailing the width of the top of the diamond, relative to its widest point. It ranges from `43.0` - `95.0`
+7.  `Price` ⇨ This is a numeric variable(integer) detailing the price of each individual diamond in US Dollars(\$). It ranges from`$326` to `$18823`.
+8.  `x` ⇨ This is a numerical variable detailing the length of each individual diamond in mm. The x values range from `0` - `10.74` mm.
+9.  `y` ⇨ This is a numeric variable detailing the width of each individual diamond in mm. The y values range from `0` - `58.9` mm.
+10. `z` ⇨ This is a numeric variable detailing the depth of each individual diamond in mm. The z values range from `0` - `31.8` mm.
+
+# [Question Two; Generate a descriptive summary of the following variables, price, carat, width , and depth. The output should be grouped by Cut and Clarity]{.underline}
+
+## Generating Descriptive Statistics for the Variables
+
+```{R}
+# Generate the summary
+descriptive_summary <- diamonds %>%
+  group_by(cut, clarity) %>%
+  summarise(
+    price_avg = mean(price, na.rm = TRUE),
+    price_sd = sd(price, na.rm = TRUE),
+    min_price = min(price, na.rm = TRUE),
+    max_price = max(price, na.rm = TRUE),
+    
+    carat_avg = mean(carat, na.rm = TRUE),
+    carat_sd = sd(carat, na.rm = TRUE),
+    min_carat = min(carat, na.rm = TRUE),
+    max_carat = max(carat, na.rm = TRUE),
+    
+    width_avg = mean(x, na.rm = TRUE),
+    width_sd = sd(x, na.rm = TRUE),
+    min_width = min(x, na.rm = TRUE),
+    max_width = max(x, na.rm = TRUE),
+    
+    depth_avg = mean(depth, na.rm = TRUE),
+    depth_sd = sd(depth, na.rm = TRUE),
+    min_depth = min(depth, na.rm = TRUE),
+    max_depth = max(depth, na.rm = TRUE)
+  )
+
+# Printing the summary
+print(descriptive_summary)
+
+```
+
+## Explanation of the code
+
+-   The argument `descriptive_summary <- diamonds %>%   group_by(cut, clarity)` makes use of the pipe operator `(%>%)` to transfer the parameters and output of one argument into the nect, thereby "chaining together multiple operations. In this case, the `diamonds` data set is grouped by `cut` and `clarity`, and the output is assigned to the variable `descriptive_summary.`
+-   The argument below calculates the mean, standard deviation, minimum and maximum values for the price variable. The argument `na.rm = TRUE` ignores any missing values.
+
+``` %>%
+  summarise(
+    price_avg = mean(price, na.rm = TRUE),
+    price_sd = sd(price, na.rm = TRUE),
+    min_price = min(price, na.rm = TRUE),
+    max_price = max(price, na.rm = TRUE),
+```
+
+-   The argument below calculates the mean, standard deviation, minimum and maximum values for the carat variable. The argument `na.rm = TRUE` ignores any missing values.
+
+```         
+carat_avg = mean(carat, na.rm = TRUE),
+    carat_sd = sd(carat, na.rm = TRUE),
+    min_carat = min(carat, na.rm = TRUE),
+    max_carat = max(carat, na.rm = TRUE),
+```
+
+-   The argument below calculates the mean, standard deviation, minimum and maximum values for the width(x) variable. The argument `na.rm = TRUE` ignores any missing values.
+
+```         
+ width_avg = mean(x, na.rm = TRUE), # assuming 'x' is width
+    width_sd = sd(x, na.rm = TRUE),
+    min_width = min(x, na.rm = TRUE),
+    max_width = max(x, na.rm = TRUE),
+```
+
+-   The argument below calculates the mean, standard deviation, minimum and maximum values for the depth variable. The argument `na.rm = TRUE` ignores any missing values.
+
+```         
+depth_avg = mean(depth, na.rm = TRUE),
+    depth_sd = sd(depth, na.rm = TRUE),
+    min_depth = min(depth, na.rm = TRUE),
+    max_depth = max(depth, na.rm = TRUE)
+```
+
+## Insights gained from the Descriptive Statistical Measures
+
+### Price Analysis
+
+1.  **Average Price (price_avg)**: This metric helps identify the average pricing trends within each cut and clarity category. Higher average prices might indicate greater demand or perceived value for diamonds with certain combinations of cut and clarity.
+
+2.  **Price Variability (price_sd)**: Variability in prices within each category suggests differences in factors such as diamond quality, market demand, or seller pricing strategies. Higher variability could imply greater price negotiation opportunities or market segmentation.
+
+3.  **Minimum and Maximum Prices (min_price, max_price**): Understanding the price range within each category is essential for pricing strategy and consumer expectation management. Wide price ranges may suggest diverse consumer preferences or market conditions.
+
+### Carat Analysis
+
+1.  **Average Carat Weight (carat_avg)**: Average carat weights provide insights into consumer preferences for diamond size within specific cut and clarity categories. Higher average carat weights might indicate preferences for larger diamonds within those categories.
+
+2.  **Carat Variability (carat_sd**): Variability in carat weights could reflect differences in diamond availability, consumer preferences, or manufacturing practices. Understanding this variability can inform inventory management and pricing strategies.
+
+3.  **Minimum and Maximum Carat Weights (min_carat, max_carat)**: Knowing the range of carat weights within each category helps identify the diversity of diamond sizes available to consumers. It can also guide pricing strategies based on rarity and consumer demand for specific sizes.
+
+### Width Analysis
+
+1.  **Average Width (width_avg)**: Average diamond widths offer insights into the physical dimensions of diamonds within each cut and clarity category. Understanding average widths can help in product categorization and consumer expectation management.
+
+2.  **Width Variability (width_sd)**: Variability in diamond widths may indicate differences in manufacturing standards, cutting practices, or consumer preferences within each category. Managing this variability can impact product consistency and customer satisfaction.
+
+3.  **Minimum and Maximum Widths (min_width, max_width):** The range of diamond widths within each category highlights the diversity of diamond shapes and sizes available to consumers. It also informs product differentiation and market positioning strategies.
+
+### Depth Analysis
+
+1.**Average Depth (depth_avg):** Average diamond depths provide insights into the proportions of diamonds within each cut and clarity category. Understanding average depths helps assess diamond aesthetics and visual appeal within specific categories.
+
+2.**Depth Variability (depth_sd):** Variability in diamond depths may indicate differences in cutting precision, manufacturing practices, or consumer preferences within each category. Managing depth variability is crucial for maintaining product quality and consistency.
+
+3.**Minimum and Maximum Depths (min_depth, max_depth)**: The range of diamond depths within each category reflects the diversity of depth proportions available to consumers. It also informs product differentiation strategies based on visual aesthetics and perceived value.
+
+# Question Three; Visualize the data, describe it and discuss your findings.
+
+## A Graph Detailing the Different Levels of Diamond Cuts
+
+```{r}
+
+ggplot(diamonds, aes(x = cut)) +
+  geom_bar(fill = "steelblue", color = "black") +
+  theme_minimal() +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Cut", y = "Count", title = "Bar Graph of Diamond Cuts")
+
+```
+
+### Explanation of the code
+
+-   The code `ggplot(diamonds, aes(x = cut))` initialises the plot and sets the aesthetic mapping for the plot.
+-   The code **`geom_bar(fill = "steelblue", color = "black")`** creates bar plots, fills them with the assigned colour and outlined the borders in the assigned colour.
+-   The code **`theme_minimal()`** sets the theme of the plot
+-   The code **`heme(text = element_text(size = 16), axis.text.x = element_text(angle = 45, hjust = 1)`** set the text size to 16, and angles the bar labels to allow for better readability and efficient use of space along the x axis.
+-   The code `labs(x = "Cut", y = "Count", title = "Bar Graph of Diamond Cuts")` defines the labels for the x- axis, y- axis and title.
+
+### Insights drawn from the plot'
+
+-   Quality of the diamonds can be inferred from the plot; a vast majority of the diamonds are of ideal quality, pointing to excellent quality control measures by the suppliers in the market, or excellent craftsmanship by the people responsible for creating the various diamond cuts.
+
+-   The cuts may play a significant role in determining the prices of the diamonds as seen below.
+
+## Boxplot of Diamond Prices by Cut
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = price)) +
+  geom_boxplot() +
+  labs(x = "Cut", y = "Price", title = "Boxplot of Diamond Prices by Cut") +
+  theme_minimal() +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(angle = 45, hjust = 1),legend.position = "none") +
+  scale_fill_brewer(palette = "Set3")
+```
+
+### Explanation of the Code
+
+-   The code `ggplot(diamonds, aes(x = cut, y = price))` initialises the plot and sets the x and y axes.
+
+-   The code `geom_boxplot() +labs(x = "Cut", y = "Price", title = "Boxplot of Diamond Prices by Cut")` adds a boxplot to the initialised plot, adds x and y axes labels and adds a title.
+
+-   The code `theme_minimal() +theme(text = element_text(size = 16),axis.text.x = element_text(angle = 45, hjust = 1)` sets the theme, text size and angle of the axes labels.
+
+-   The code `scale_fill_brewer(palette = "Set3"` sets a colour for the box plots.
+
+### Insights Drawn from the Plot
+
+-   It is interesting to note the high number of outliers in the ideal and fair cuts; hinting at the existence of exceptionally high quality diamonds for the individual cuts, thereby commanding higher prices.
+
+-   It is also interesting to note the premium cuts have higher median prices and greater price variability than ideal cuts, despite their lower tier.
+
+## Boxplot of Diamond Prices by Colour
+
+```{r}
+ggplot(diamonds, aes(x = color, y = price)) +
+  geom_boxplot() +
+  labs(x = "Color", y = "Price", title = "Boxplot of Diamond Prices by Color") +
+  theme_minimal() +
+  theme(text = element_text(size = 16),
+        axis.text.x = element_text(angle = 45, hjust = 1),legend.position = "none") +
+  scale_fill_brewer(palette = "Set3")
+
+
+```
+
+### Explanation of the Code
+
+The code `ggplot(diamonds, aes(x = color, y = price))` initialises the plot and sets the x and y axes. - The code `geom_boxplot() +labs(x = "Color", y = "Price", title = "Boxplot of Diamond Prices by Color")` adds a boxplot to the initialised plot, adds x and y axes labels and adds a title. - The code `theme_minimal() +theme(text = element_text(size = 16),axis.text.x = element_text(angle = 45, hjust = 1)` sets the theme, text size and angle of the axes labels. - The code `scale_fill_brewer(palette = "Set3"` sets a colour for the box plots.
+
+### Insights Drawn from the Plot
+
+-   While the colour `J` occupies the lowest tier, it commands the highest median value and price variability. This can be attributed to its allure as a 'good value for money' product, with buyers steering clear of lighter shades to avoid higher prices. This greater demand inevitably drives up prices of the `J` coloured diamonds. As he J colour is a warmer colour, it may be more appeealing when set in particular designs and metal types such as gold.
+
+-   The greater variability in prices may be attributed to varying individual charaacteristics among diamonds in the `J` colour class. Perceived value also plays a significant role in driving prices towards a particular direction.
+
+## Scatter Plot of Carats and Prices
+
+```{r}
+
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  geom_point(color = "#FF5733", alpha = 0.6, size = 3) +  # Customizing point aesthetics
+  geom_smooth(method = "lm", se = FALSE, color = "#1F77B4", linetype = "dashed") +  # Add line of best fit
+  labs(
+    title = "Scatter Plot: Diamond Price vs. Carat",
+    x = "Carat",
+    y = "Price (USD)"
+  ) +
+  theme_minimal()  # Using a minimal theme
+
+```
+
+### Explanation of the code
+
+-   The code `ggplot(data = diamonds, aes(x = carat, y = price))` initialises the plot, sets the dataset to be used and sets up aesthetic mapping for the plot
+
+-   The code `geom_point(color = "#FF5733", alpha = 0.6, size = 3)` adds data ppoint to the plot, and sets the transparency and size of the points
+
+-   The code `geom_smooth(method = "lm", se = FALSE, color = "#1F77B4", linetype = "dashed")` adds a line of best fit
+
+-   The code below adds a title and sets the labels for thr x and y axes
+
+``` labs(
+  title = "Scatter Plot: Diamond Price vs. Carat",
+  x = "Carat",
+  y = "Price (USD)"
+)
+```
+
+-   The code `theme_minimal()` sets the theme for the plot.
+
+### Insights Drawm from the Plot
+
+-   There is a positive correlation between the carats and prices of the diamonds. Increasing diamond carats increase the diamonds' prices. This is possibly because larger diamonds are typically priced higher than smaller diamonds.
+
+-   The spread of data points around the line of best fit indicate a considerable amount of variability in prices for given carats. This is as a result of the influence of factors beyond carat weight, such as colour and cut.
+
+-   Outliers in the plot may point to diamonds with exceptional characteristics commanding very high prices.
+
+## Scatter plot of Clarity and Prices
+
+```{r}
+
+# Create the bar plot
+library(ggplot2)
+
+# Create the bar plot
+ggplot(data = diamonds, aes(x = clarity, y = price, fill = clarity)) +
+  geom_bar(stat = "summary", fun = "median", color = "black") +  # Add black borders
+  labs(
+    x = "Clarity",
+    y = "Median Price",
+    title = "Median Price of Diamonds by Clarity"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  scale_fill_brewer(palette = "Set3")
+
+
+
+```
+
+### Explanation of the Code
+
+-   The code `ggplot(data = diamonds, aes(x = clarity, y = price, fill = clarity))` initialises the plot.
+
+-   The code `aes(x = clarity, y = price, fill = clarity` sets the aesthetic mappings.
+
+-   The code `geom_bar(stat = "summary", fun = "median", color = "black")` adds the bars to the plot and colours the borders.
+
+-   the code below sets the axes labels and title of the plot
+
+```         
+labs(
+  x = "Clarity",
+  y = "Median Price",
+  title = "Median Price of Diamonds by Clarity"
+)
+```
+
+-   The code below sets the theme for the plot
+
+```         
+theme_minimal() +
+theme(
+  text = element_text(size = 14),
+  axis.text.x = element_text(angle = 45, hjust = 1)
+)
+```
+
+### Insights Drawn from the Plot
+
+-   SI2 has higher median prices, despite being lower tier compared to I1. This can be attributed to some SI2 tier diamonds possessing exceptional qualities in terms of colour and cut. Market dynamics such as higher demand for particular clarity tiers may also be responsible for higher median prices.
+
+-   Apart from the SI2 tier, there is a general inverse correlation between clarity and median prices. This may be due to market dynamics increasing demand for those tiers.
+
+# Question Four; Are there differences based on Cut and Clarity?
+
+```{r}
+library(ggplot2)
+
+# Create a bar plot of clarity against cut
+ggplot(diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar(position = "fill") +
+  labs(x = "Cut", y = "Proportion", title = "Distribution of Clarity by Cut") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+
+
+
+```
+
+### Explanation of the Code
+
+-   The code `ggplot(diamonds, aes(x = cut, fill = clarity))` initialses the plot
+
+-   The code `aes(x = cut, fill = clarity)` sets the aesthetic mapping for the plot.
+
+-   The code `geom_bar(position = "fill")` Adds bars to the plot and specifies that the height of each bar should represent the proportion of diamonds within each cut category, and each bar should fill the entire vertical space.
+
+-   The code `labs(x = "Cut", y = "Proportion", title = "Distribution of Clarity by Cut")` labels the plot and adds a title
+
+-   The code `theme_minimal()` sets the theme.
+
+### Differences Based of Cut and Clarity
+
+-   There indeed exists differences based on cut and clarity.
+
+1.  There are relatively higher proportions of diamonds of diamonds with clarity tiers SI1 and VS2.This can be attributed to them offering a proper balance between clarity and price, positioning them as a better option for buyers.
+
+2.  There is a relatively even distribution within the very good cut category; suggesting that buyers may possibly be selecting for other characteristics over clarity.
+
+3.  There are higher proportions of Higher Proportion of SI1 and SI2 in the good and fair cut categories; pointing to the fact that buyers may be compromising on clarity to compensate for cut quality, thereby striking a balance between size, quality and prices.
+
+# END
